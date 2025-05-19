@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import ffmpeg from "fluent-ffmpeg"
-import fs from "fs"
 import path from "path";
 import Video from "../models/video.model"
 import { summarizeText, transcribeAudio } from "../utils/utility";
@@ -34,8 +33,6 @@ export const handleUpload = async (req: Request, res: Response): Promise<void> =
                 })
                 .run()
         })
-
-        // const audioBuffer = fs.readFileSync(audioPath)
 
         const transcript = await transcribeAudio(audioPath)
 
