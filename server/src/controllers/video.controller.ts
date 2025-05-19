@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import ffmpeg from "fluent-ffmpeg"
 import path from "path";
+import fs from "fs"
 import Video from "../models/video.model"
 import { summarizeText, transcribeAudio } from "../utils/utility";
 
@@ -24,7 +25,6 @@ export const handleUpload = async (req: Request, res: Response): Promise<void> =
                 .output(audioPath)
                 .on("end", () => {
                     console.log("Audio extraction complete");
-                    
                     resolve()
                 })
                 .on("error", (e: any) => {
@@ -47,5 +47,8 @@ export const handleUpload = async (req: Request, res: Response): Promise<void> =
         res.status(201).json(saved)
     } catch (err) {
         res.status(500).json(`Something went wrong: ${err}`)
+    } finally {
+        fs.unlink(audioPath, () => {})
+        fs.unlink(videoPath, () => {})
     }
 }
